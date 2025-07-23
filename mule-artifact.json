@@ -1,0 +1,15 @@
+{
+  "minMuleVersion": "4.3.0",
+  "secureProperties": [],
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedResources": [],
+      "exportedPackages": [],
+      "requiredBundles": []
+    }
+  },
+  "name": "external-rest-to-salesforce",
+  "description": "A Mule application that receives an external REST POST and creates a Contact in Salesforce.",
+  "mainClass": "org.mule.runtime.module.launcher.MuleContainerBootstrap"
+}
