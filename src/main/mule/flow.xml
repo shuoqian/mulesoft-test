@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+      xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+        http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+
+    <!-- HTTP Config -->
+    <http:listener-config name="HTTP_Listener_config" host="0.0.0.0" port="8081"/>
+
+    <!-- Salesforce Config -->
+    <salesforce:config name="Salesforce_Config"
+                       username="your-username@domain.com"
+                       password="yourPasswordAndSecurityToken"
+                       doc:name="Salesforce Configuration"
+                       connectionTimeout="10000"
+                       receiveTimeout="10000"/>
+
+    <!-- Main Flow -->
+    <flow name="CreateContactFlow">
+        <!-- Accept HTTP POST -->
+        <http:listener doc:name="Receive Request"
+                       config-ref="HTTP_Listener_config"
+                       path="/create-contact"
+                       allowedMethods="POST"/>
+
+        <!-- Transform incoming JSON to Salesforce Contact structure -->
+        <dw:transform-message doc:name="Map to Salesforce Contact">
+            <dw:input-payload mimeType="application/json"/>
+            <dw:set-payload><![CDATA[
+                %dw 2.0
+                output application/java
+                ---
+                {
+                    FirstName: payload.firstName,
+                    LastName: payload.lastName,
+                    Email: payload.email,
+                    Phone: payload.phone
+                }
+            ]]></dw:set-payload>
+        </dw:transform-message>
+
+        <!-- Create Salesforce Contact -->
+        <salesforce:create config-ref="Salesforce_Config" type="Contact" doc:name="Create Contact">
+            <salesforce:objects>
+                <salesforce:object>
+                    <salesforce:field key="FirstName" value="#[payload.FirstName]"/>
+                    <salesforce:field key="LastName" value="#[payload.LastName]"/>
+                    <salesforce:field key="Email" value="#[payload.Email]"/>
+                    <salesforce:field key="Phone" value="#[payload.Phone]"/>
+                </salesforce:object>
+            </salesforce:objects>
+        </salesforce:create>
+
+        <!-- Return confirmation response -->
+        <dw:transform-message doc:name="Response">
+            <dw:set-payload><![CDATA[
+                %dw 2.0
+                output application/json
+                ---
+                {
+                    status: "success",
+                    message: "Contact created successfully",
+                    salesforceResponse: payload
+                }
+            ]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+
+</mule>
