@@ -16,6 +16,7 @@ This MuleSoft application receives contact data via an HTTP POST request (extern
 
 ## 📂 Project Structure
 
+```text
 external-rest-to-salesforce/
 ├── mule-artifact.json        // Project metadata
 ├── src/
@@ -24,9 +25,10 @@ external-rest-to-salesforce/
 │           └── flow.xml      // Main integration logic
 ├── README.md
 └── pom.xml (optional)
-
+```
 
 ## 📥 Sample Request
+```text
 POST http://localhost:8081/create-contact
 {
   "firstName": "Alice",
@@ -34,8 +36,10 @@ POST http://localhost:8081/create-contact
   "email": "alice.smith@example.com",
   "phone": "555-1234"
 }
+```
 
 ## ✅ Sample Response
+```text
 {
   "status": "success",
   "message": "Contact created successfully",
@@ -47,8 +51,10 @@ POST http://localhost:8081/create-contact
     }
   ]
 }
+```
 
 ## 🔧 Configuration
+```text
 Edit the Salesforce Connector in flow.xml:
 
 <salesforce:config name="Salesforce_Config"
@@ -57,8 +63,10 @@ Edit the Salesforce Connector in flow.xml:
                    doc:name="Salesforce Configuration"/>
 
 🔐 Tip: Use secure properties or Anypoint Secrets Manager for production deployments.
+```
 
 ## 🚀 Running the App
+```text
 Open in Anypoint Studio (Mule 4.3+).
 
 Set port=8081 in listener if needed.
@@ -70,3 +78,4 @@ Use Postman or cURL to test:
 curl -X POST http://localhost:8081/create-contact \
   -H "Content-Type: application/json" \
   -d '{"firstName":"John","lastName":"Doe","email":"john@example.com","phone":"1234567890"}'
+```
