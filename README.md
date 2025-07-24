@@ -17,14 +17,16 @@ This MuleSoft application receives contact data via an HTTP POST request (extern
 ## 📂 Project Structure
 
 external-rest-to-salesforce/
-├── mule-artifact.json        # Project metadata
+├── mule-artifact.json        // Project metadata
 ├── src/
 │   └── main/
 │       └── mule/
-│           └── flow.xml      # Main integration logic
+│           └── flow.xml      // Main integration logic
 ├── README.md
 └── pom.xml (optional)
-📥 Sample Request
+
+
+## 📥 Sample Request
 POST http://localhost:8081/create-contact
 {
   "firstName": "Alice",
@@ -53,6 +55,7 @@ Edit the Salesforce Connector in flow.xml:
                    username="your-username@domain.com"
                    password="yourPasswordAndSecurityToken"
                    doc:name="Salesforce Configuration"/>
+
 🔐 Tip: Use secure properties or Anypoint Secrets Manager for production deployments.
 
 ## 🚀 Running the App
